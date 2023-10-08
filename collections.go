@@ -43,7 +43,7 @@ type Collection[E comparable] interface {
 	// AddAll Adds all of the elements in the specified collection to this collection (optional operation).
 	AddAll(c Collection[E]) bool
 	// AddSlice Adds all of the elements in the specified collection to this collection (optional operation).
-	AddSlice(elements []E) bool
+	AddSlice(elements ...E) bool
 	// Clear Removes all of the elements from this collection (optional operation).
 	Clear() bool
 	// Contains Returns true if this collection contains the specified element.
@@ -52,7 +52,7 @@ type Collection[E comparable] interface {
 	ContainsAll(c Collection[E]) bool
 	// Equals  Compares the specified object with this collection for equality. When E implements the EqualsWith interface, the comparison is first made using EqualsWith 's IsEquals()
 	Equals(e Collection[E]) bool
-	// EqualsWithFn use the custom method fn to compare whether the elements in the collection are equal
+	// EqualsWithFn use the custom method fn to compare whether the elements in the collection are equal.if fn is nil, the default Equals() will be used for comparison
 	EqualsWithFn(e Collection[E], fn func(o1, o2 E) bool) bool
 	// IsEmpty Returns true if this collection contains no elements.
 	IsEmpty() bool
@@ -95,9 +95,20 @@ type HashSet[E comparable] interface {
 
 type List[E comparable] interface {
 	Collection[E]
-	// Sort Sorts this list according to the order induced by the specified Comparator. The sort is stable: this method must not reorder equal elements.
-	//All elements in this list must be mutually comparable using the specified comparator (that is, c.compare(e1, e2) must not throw a ClassCastException for any elements e1 and e2 in the list).
-	Sort(c Comparator[E])
+	// Sort Sorts this list according to the order. The sort is stable: this method must not reorder equal elements. the element of the List must implement the CompareWith interface,otherwise, an exception will be thrown
+	Sort()
+	// SortWithComparator Sorts this list according to the order induced by the specified Comparator. The sort is stable: this method must not reorder equal elements.
+	//	//All elements in this list must be mutually comparable using the specified comparator (that is, c.compare(e1, e2) must not throw a ClassCastException for any elements e1 and e2 in the list).
+	SortWithComparator(c Comparator[E])
+	// SortWithFn Sorts this list according to the order induced by the  lessFn function. lessFn will return true if o1 less than o2.
+	// for example：
+	// fun (o1,o2, int) bool {
+	//  if o1 < o2 {
+	//   return true
+	//}
+	// return false
+	//}
+	SortWithFn(lessFn func(o1, o2 E) bool)
 	// Get Returns the element at the specified position in this list.
 	// Params:
 	// index – index of the element to return
@@ -145,4 +156,6 @@ type ArrayList[E comparable] interface {
 	// Clone Returns a shallow copy of this ArrayList instance. (The elements themselves are not copied.)
 	// Returns: a clone of this ArrayList instance
 	Clone() ArrayList[E]
+	// ToDataSlice Returns the underlying array for traversing elements
+	ToDataSlice() []E
 }

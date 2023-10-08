@@ -16,7 +16,11 @@ type User struct {
 	Address string
 }
 
-func (u User) IsEquals(e User) bool {
+func (u *User) CompareTo(e User) int {
+	return u.Age - e.Age
+}
+
+func (u *User) IsEquals(e User) bool {
 	if u.Name == e.Name {
 		return true
 	}

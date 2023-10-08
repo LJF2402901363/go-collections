@@ -48,7 +48,7 @@ func (h *hashSetImpl[E]) AddAll(c Collection[E]) bool {
 	return true
 }
 
-func (h *hashSetImpl[E]) AddSlice(list []E) bool {
+func (h *hashSetImpl[E]) AddSlice(list ...E) bool {
 	fla := true
 	for _, item := range list {
 		fla = fla && h.Add(item)
