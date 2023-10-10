@@ -98,7 +98,7 @@ type List[E comparable] interface {
 	// Sort Sorts this list according to the order. The sort is stable: this method must not reorder equal elements. the element of the List must implement the CompareWith interface,otherwise, an exception will be thrown
 	Sort()
 	// SortWithComparator Sorts this list according to the order induced by the specified Comparator. The sort is stable: this method must not reorder equal elements.
-	//	//All elements in this list must be mutually comparable using the specified comparator (that is, c.compare(e1, e2) must not throw a ClassCastException for any elements e1 and e2 in the list).
+	//	All elements in this list must be mutually comparable using the specified comparator (that is, c.compare(e1, e2) must not throw a ClassCastException for any elements e1 and e2 in the list).
 	SortWithComparator(c Comparator[E])
 	// SortWithFn Sorts this list according to the order induced by the  lessFn function. lessFn will return true if o1 less than o2.
 	// for example：

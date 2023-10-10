@@ -389,9 +389,10 @@ func Test_arrayList_SubList(t *testing.T) {
 }
 
 func Test_arrayList_ToSlice(t *testing.T) {
-
-}
-
-func Test_arrayList_growth(t *testing.T) {
-
+	intList := NewArrayList[int]()
+	intList.Add(1)
+	intList.Add(2)
+	intList.Add(3)
+	intList.Add(3)
+	fmt.Println(intList.ToSlice())
 }
