@@ -1,12 +1,19 @@
 # 1.简介
 
 >├── README.md
+>
 >├── array_list.go							   # ArrayList的实现.go文件
+>
 >├── array_list_test.go
+>
 >├── collections.go     					# 公共接口，HashSet接口，ArrayList接口所在.go文件
+>
 >├── go.mod
+>
 >├── hash_set.go                           # HashSet的实现.go文件
+>
 >└── hash_set_test.go
+>
 
 ​	本项目旨在通过使用go模拟Java的集合框架实现HashSet和ArrayList，从而提供更强大的功能给用户使用。
 
