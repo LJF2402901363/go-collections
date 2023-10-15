@@ -11,15 +11,15 @@ import (
 )
 
 func Test_arrayList_Add(t *testing.T) {
-	intList := NewArrayListWithCap[int](2)
+	intList := NewArrayList[int]()
 	intList.Add(1)
 	intList.Add(2)
 	intList.Add(1)
-	intList1 := NewArrayListWithCap[string](2)
+	intList1 := NewArrayList[string]()
 	intList1.Add("1")
 	intList1.Add("2")
 	intList1.Add("3")
-	intList2 := NewArrayListWithCap[User](2)
+	intList2 := NewArrayList[User]()
 	intList2.Add(User{
 		Name:    "1",
 		Age:     1,
@@ -39,18 +39,18 @@ func Test_arrayList_Add(t *testing.T) {
 }
 
 func Test_arrayList_AddAll(t *testing.T) {
-	intList := NewArrayListWithCap[int](2)
+	intList := NewArrayList[int]()
 	intList.Add(1)
 	intList.Add(2)
 	intList.Add(1)
 
-	intList2 := NewArrayListWithCap[int](2)
+	intList2 := NewArrayList[int]()
 	intList2.Add(1)
 	intList2.Add(32)
 	intList2.Add(323)
 	intList.AddAll(intList2)
 
-	intList3 := NewArrayListWithCap[int](2)
+	intList3 := NewArrayList[int]()
 	intList.AddAll(intList3)
 	intList3.Add(332)
 	intList3.AddSlice(1, 2, 3, 4, 5)
@@ -59,7 +59,7 @@ func Test_arrayList_AddAll(t *testing.T) {
 }
 
 func Test_arrayList_AddWithIndex(t *testing.T) {
-	intList := NewArrayListWithCap[int](2)
+	intList := NewArrayList[int]()
 	intList.Add(1)
 	intList.Add(2)
 	intList.Add(1)
@@ -70,7 +70,7 @@ func Test_arrayList_AddWithIndex(t *testing.T) {
 }
 
 func Test_arrayList_Clear(t *testing.T) {
-	intList := NewArrayListWithCap[int](2)
+	intList := NewArrayList[int]()
 	intList.Add(1)
 	intList.Add(2)
 	intList.Add(1)
@@ -79,7 +79,7 @@ func Test_arrayList_Clear(t *testing.T) {
 }
 
 func Test_arrayList_Clone(t *testing.T) {
-	intList := NewArrayListWithCap[int](2)
+	intList := NewArrayList[int]()
 	intList.Add(1)
 	intList.Add(2)
 	intList.Add(1)
@@ -89,7 +89,7 @@ func Test_arrayList_Clone(t *testing.T) {
 }
 
 func Test_arrayList_Contains(t *testing.T) {
-	intList := NewArrayListWithCap[int](2)
+	intList := NewArrayList[int]()
 	intList.Add(1)
 	intList.Add(2)
 	intList.Add(1)
@@ -98,7 +98,7 @@ func Test_arrayList_Contains(t *testing.T) {
 }
 
 func Test_arrayList_ContainsAll(t *testing.T) {
-	intList := NewArrayListWithCap[int](2)
+	intList := NewArrayList[int]()
 	intList.Add(1)
 	intList.Add(2)
 	intList.Add(1)
@@ -112,13 +112,13 @@ func Test_arrayList_ContainsAll(t *testing.T) {
 }
 
 func Test_arrayList_Equals(t *testing.T) {
-	intList := NewArrayListWithCap[int](2)
+	intList := NewArrayList[int]()
 	intList.Add(1)
 	intList.Add(2)
 	intList.Add(1)
 	fmt.Println(intList.Equals(intList))
 
-	intList1 := NewArrayListWithCap[int](2)
+	intList1 := NewArrayList[int]()
 	intList1.Add(1)
 	intList1.Add(2)
 	fmt.Println(intList.Equals(intList1))
@@ -134,13 +134,13 @@ func Test_arrayList_EqualsWithFn(t *testing.T) {
 	fn := func(a, b int) bool {
 		return a == b
 	}
-	intList := NewArrayListWithCap[int](2)
+	intList := NewArrayList[int]()
 	intList.Add(1)
 	intList.Add(2)
 	intList.Add(1)
 	fmt.Println(intList.EqualsWithFn(intList, fn))
 
-	intList1 := NewArrayListWithCap[int](2)
+	intList1 := NewArrayList[int]()
 	intList1.Add(1)
 	intList1.Add(2)
 	fmt.Println(intList.EqualsWithFn(intList1, fn))
@@ -152,7 +152,7 @@ func Test_arrayList_EqualsWithFn(t *testing.T) {
 }
 
 func Test_arrayList_Get(t *testing.T) {
-	intList := NewArrayListWithCap[int](2)
+	intList := NewArrayList[int]()
 	intList.Add(1)
 	intList.Add(2)
 	intList.Add(3)
@@ -164,7 +164,7 @@ func Test_arrayList_Get(t *testing.T) {
 }
 
 func Test_arrayList_IndexOf(t *testing.T) {
-	intList := NewArrayListWithCap[int](2)
+	intList := NewArrayList[int]()
 	intList.Add(1)
 	intList.Add(2)
 	intList.Add(3)
@@ -175,7 +175,7 @@ func Test_arrayList_IndexOf(t *testing.T) {
 }
 
 func Test_arrayList_IsEmpty(t *testing.T) {
-	intList := NewArrayListWithCap[int](2)
+	intList := NewArrayList[int]()
 	fmt.Println(intList.IsEmpty())
 	intList.Add(1)
 	intList.Add(2)
@@ -185,7 +185,7 @@ func Test_arrayList_IsEmpty(t *testing.T) {
 }
 
 func Test_arrayList_LastIndexOf(t *testing.T) {
-	intList := NewArrayListWithCap[int](2)
+	intList := NewArrayList[int]()
 	intList.Add(1)
 	intList.Add(2)
 	intList.Add(3)
@@ -195,7 +195,7 @@ func Test_arrayList_LastIndexOf(t *testing.T) {
 	fmt.Println(intList.LastIndexOf(2))
 	fmt.Println(intList.LastIndexOf(3))
 
-	strList := NewArrayListWithCap[string](2)
+	strList := NewArrayList[string]()
 	strList.Add("a")
 	strList.Add("b")
 	strList.Add("c")
@@ -208,7 +208,7 @@ func Test_arrayList_LastIndexOf(t *testing.T) {
 }
 
 func Test_arrayList_Remove(t *testing.T) {
-	intList := NewArrayListWithCap[int](2)
+	intList := NewArrayList[int]()
 	intList.Add(1)
 	intList.Add(2)
 	intList.Add(3)
@@ -218,13 +218,13 @@ func Test_arrayList_Remove(t *testing.T) {
 }
 
 func Test_arrayList_RemoveAll(t *testing.T) {
-	intList := NewArrayListWithCap[int](2)
+	intList := NewArrayList[int]()
 	intList.Add(1)
 	intList.Add(2)
 	intList.Add(3)
 	intList.Add(3)
 
-	intList1 := NewArrayListWithCap[int](2)
+	intList1 := NewArrayList[int]()
 	intList1.Add(2)
 	intList1.Add(3)
 	intList1.Add(1)
@@ -235,7 +235,7 @@ func Test_arrayList_RemoveAll(t *testing.T) {
 }
 
 func Test_arrayList_RemoveWithIndex(t *testing.T) {
-	intList := NewArrayListWithCap[int](2)
+	intList := NewArrayList[int]()
 	intList.Add(1)
 	intList.Add(2)
 	intList.Add(3)
@@ -247,14 +247,14 @@ func Test_arrayList_RemoveWithIndex(t *testing.T) {
 }
 
 func Test_arrayList_RetainAll(t *testing.T) {
-	intList := NewArrayListWithCap[int](2)
+	intList := NewArrayList[int]()
 	intList.Add(1)
 	intList.Add(2)
 	intList.Add(3)
 	intList.Add(3)
 	fmt.Println(intList.RetainAll(intList))
 
-	intList1 := NewArrayListWithCap[int](2)
+	intList1 := NewArrayList[int]()
 	intList1.Add(1)
 	//fmt.Println(intList.RetainAll(intList1))
 	intList1.Add(2)
@@ -266,7 +266,7 @@ func Test_arrayList_RetainAll(t *testing.T) {
 }
 
 func Test_arrayList_Set(t *testing.T) {
-	intList := NewArrayListWithCap[int](2)
+	intList := NewArrayList[int]()
 	intList.Add(1)
 	intList.Add(2)
 	intList.Add(3)
@@ -281,7 +281,7 @@ func Test_arrayList_Set(t *testing.T) {
 }
 
 func Test_arrayList_Size(t *testing.T) {
-	intList := NewArrayListWithCap[*int](2)
+	intList := NewArrayList[*int]()
 	e := 1
 	intList.Add(&e)
 	b := 2
@@ -310,7 +310,7 @@ func (d *DefaultUserComparator) Compare(o1, o2 User) int {
 }
 
 func Test_arrayList_Sort(t *testing.T) {
-	intList2 := NewArrayListWithCap[User](2)
+	intList2 := NewArrayList[User]()
 	intList2.Add(User{
 		Name:    "1",
 		Age:     1,
@@ -331,7 +331,7 @@ func Test_arrayList_Sort(t *testing.T) {
 }
 
 func Test_arrayList_SortWithComparator(t *testing.T) {
-	intList2 := NewArrayListWithCap[User](2)
+	intList2 := NewArrayList[User]()
 	intList2.Add(User{
 		Name:    "1",
 		Age:     1,
@@ -353,7 +353,7 @@ func Test_arrayList_SortWithComparator(t *testing.T) {
 }
 
 func Test_arrayList_SortWithFn(t *testing.T) {
-	intList2 := NewArrayListWithCap[User](2)
+	intList2 := NewArrayList[User]()
 	intList2.Add(User{
 		Name:    "1",
 		Age:     1,
@@ -370,7 +370,7 @@ func Test_arrayList_SortWithFn(t *testing.T) {
 		Address: "a",
 	})
 	intList2.SortWithFn(func(o1, o2 User) bool {
-		return o1.Age < o2.Age
+		return o1.Age > o2.Age
 	})
 	fmt.Println(intList2.ToSlice())
 }
@@ -395,4 +395,16 @@ func Test_arrayList_ToSlice(t *testing.T) {
 	intList.Add(3)
 	intList.Add(3)
 	fmt.Println(intList.ToSlice())
+}
+
+func Test_arrayList_ToDataSlice(t *testing.T) {
+	intList := NewArrayList[int]()
+	intList.Add(1)
+	intList.Add(2)
+	intList.Add(3)
+	intList.Add(3)
+	intList.Add(1312)
+	for _, item := range intList.ToDataSlice() {
+		fmt.Println(item)
+	}
 }

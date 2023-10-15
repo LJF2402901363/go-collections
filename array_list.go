@@ -11,37 +11,17 @@ import (
 	"sort"
 )
 
-const (
-	// DefaultArrayListCapacity 默认的元素集合长度
-	DefaultArrayListCapacity = 10
-)
-
 type arrayList[E comparable] struct {
-	capacity int
-	eleSize  int
 	elements []E
 }
 
 func NewArrayList[E comparable]() ArrayList[E] {
-	arr := arrayList[E]{
-		capacity: DefaultArrayListCapacity}
-	arr.elements = make([]E, DefaultArrayListCapacity)
-	return &arr
-}
-func NewArrayListWithCap[E comparable](capacity int) ArrayList[E] {
-	arr := arrayList[E]{
-		capacity: capacity,
-	}
-	arr.elements = make([]E, capacity)
+	arr := arrayList[E]{}
+	arr.elements = make([]E, 0)
 	return &arr
 }
 func (a *arrayList[E]) Add(e E) bool {
-	if a.eleSize >= a.capacity {
-		// 元素已满，需要扩容1倍
-		a.growth(a.capacity << 1)
-	}
-	a.elements[a.eleSize] = e
-	a.eleSize++
+	a.elements = append(a.elements, e)
 	return true
 }
 
@@ -64,8 +44,7 @@ func (a *arrayList[E]) AddSlice(elements ...E) bool {
 }
 
 func (a *arrayList[E]) Clear() bool {
-	a.elements = make([]E, DefaultArrayListCapacity)
-	a.eleSize = 0
+	a.elements = nil
 	return true
 }
 
@@ -121,7 +100,7 @@ func (a *arrayList[E]) EqualsWithFn(e Collection[E], fn func(o1 E, o2 E) bool) b
 	}
 
 	rightSlice := e.ToSlice()
-	for i := 0; i < a.eleSize; i++ {
+	for i := 0; i < len(a.elements); i++ {
 		fla := false
 		for _, rightItem := range rightSlice {
 			fla = fn(a.elements[i], rightItem)
@@ -136,7 +115,7 @@ func (a *arrayList[E]) EqualsWithFn(e Collection[E], fn func(o1 E, o2 E) bool) b
 
 	for _, element := range rightSlice {
 		fla := false
-		for i := 0; i < a.eleSize; i++ {
+		for i := 0; i < len(a.elements); i++ {
 			fla = fn(element, a.elements[i])
 			if fla {
 				break
@@ -150,7 +129,7 @@ func (a *arrayList[E]) EqualsWithFn(e Collection[E], fn func(o1 E, o2 E) bool) b
 }
 
 func (a *arrayList[E]) IsEmpty() bool {
-	return a.eleSize == 0
+	return a.Size() == 0
 }
 
 func (a *arrayList[E]) Remove(e E) bool {
@@ -167,14 +146,14 @@ func (a *arrayList[E]) RemoveAll(c Collection[E]) bool {
 		return false
 	}
 	count := 0
-	for i := 0; i < a.eleSize; i++ {
+	for i := 0; i < a.Size(); i++ {
 		if c.Contains(a.elements[i]) {
 			count++
 		}
 	}
-	arr := make([]E, a.eleSize-count)
+	arr := make([]E, a.Size()-count)
 	index := 0
-	for i := 0; i < a.eleSize; i++ {
+	for i := 0; i < a.Size(); i++ {
 		e := a.elements[i]
 		if c.Contains(e) {
 			continue
@@ -183,33 +162,26 @@ func (a *arrayList[E]) RemoveAll(c Collection[E]) bool {
 		index++
 	}
 	a.elements = arr
-	a.eleSize = index
 	return true
 }
 
 func (a *arrayList[E]) RetainAll(c Collection[E]) bool {
 	if c == nil || c.Size() == 0 {
 		a.elements = make([]E, 0)
-		a.eleSize = 0
 		return true
 	}
-	newCapacity := c.Size()
-	newElements := make([]E, newCapacity)
-	index := 0
+	var newElements []E
 	for _, element := range a.elements {
 		if c.Contains(element) {
-			newElements[index] = element
-			index++
+			newElements = append(newElements, element)
 		}
 	}
 	a.elements = newElements
-	a.eleSize = index
-	a.capacity = newCapacity
 	return true
 }
 
 func (a *arrayList[E]) Size() int {
-	return a.eleSize
+	return len(a.elements)
 }
 
 func (a *arrayList[E]) ToSlice() []E {
@@ -276,6 +248,9 @@ func (a *arrayList[E]) SortWithComparator(comparator Comparator[E]) {
 	if comparator == nil {
 		panic(fmt.Errorf("comparator can not be nil"))
 	}
+	if a.Size() <= 1 {
+		return
+	}
 	sort.SliceStable(a.elements, func(i, j int) bool {
 		return comparator.Compare(a.elements[i], a.elements[j]) < 0
 	})
@@ -289,8 +264,8 @@ func (a *arrayList[E]) SortWithFn(lessFn func(o1, o2 E) bool) {
 	})
 }
 func (a *arrayList[E]) Get(index int) E {
-	if index >= a.eleSize {
-		panic(fmt.Errorf("toIndex:%d out of index bound：%d", index, a.eleSize))
+	if index >= a.Size() {
+		panic(fmt.Errorf("toIndex:%d out of index bound：%d", index, a.Size()))
 	}
 	if index < 0 {
 		panic(fmt.Errorf("fromIndex:%d out of index bound：%d", index, 0))
@@ -299,8 +274,8 @@ func (a *arrayList[E]) Get(index int) E {
 }
 
 func (a *arrayList[E]) Set(index int, e E) {
-	if index >= a.eleSize {
-		panic(fmt.Errorf("toIndex:%d out of index bound：%d", index, a.eleSize))
+	if index >= a.Size() {
+		panic(fmt.Errorf("toIndex:%d out of index bound：%d", index, a.Size()))
 	}
 	if index < 0 {
 		panic(fmt.Errorf("fromIndex:%d out of index bound：%d", index, 0))
@@ -309,44 +284,36 @@ func (a *arrayList[E]) Set(index int, e E) {
 }
 
 func (a *arrayList[E]) AddWithIndex(index int, e E) {
-	if index > a.eleSize {
-		panic(fmt.Errorf("toIndex:%d out of index bound：%d", index, a.eleSize))
+	if index > a.Size() {
+		panic(fmt.Errorf("toIndex:%d out of index bound：%d", index, a.Size()))
 	}
 	if index < 0 {
 		panic(fmt.Errorf("fromIndex:%d out of index bound：%d", index, 0))
 	}
-	if a.capacity <= a.eleSize+1 {
-		// 超出元素了，要扩容
-		a.growth(a.capacity << 1)
+	if index == a.Size() {
+		// 插入尾部
+		a.elements = append(a.elements, e)
+		return
 	}
-	// [index,elemSize)区间之间的元素都向右移动一个位置
-	for i := a.eleSize - 1; i >= index; i-- {
-		a.elements[i+1] = a.elements[i]
-	}
+	a.elements = append(a.elements[:index+1], a.elements[index:]...)
 	a.elements[index] = e
-	a.eleSize++
 }
 
 func (a *arrayList[E]) RemoveWithIndex(index int) E {
-	if index >= a.eleSize {
-		panic(fmt.Errorf("toIndex:%d out of index bound：%d", index, a.eleSize))
+	if index >= a.Size() {
+		panic(fmt.Errorf("toIndex:%d out of index bound：%d", index, a.Size()))
 	}
 	if index < 0 {
 		panic(fmt.Errorf("fromIndex:%d out of index bound：%d", index, 0))
 	}
 	e := a.elements[index]
-	for i := index; i < a.eleSize-1; i++ {
-		//  从 [index,eleSize-1]这个区间，所有元素都从由往左移动一位
-		a.elements[i] = a.elements[i+1]
-	}
-	a.eleSize--
 	// 删除最后一个元素
-	a.elements = append(a.elements[:a.eleSize])
+	a.elements = append(a.elements[:index], a.elements[index+1:]...)
 	return e
 }
 
 func (a *arrayList[E]) IndexOf(e E) int {
-	for i := 0; i < a.eleSize; i++ {
+	for i := 0; i < a.Size(); i++ {
 		if a.elements[i] == e {
 			return i
 		}
@@ -355,7 +322,7 @@ func (a *arrayList[E]) IndexOf(e E) int {
 }
 
 func (a *arrayList[E]) LastIndexOf(e E) int {
-	for i := a.eleSize - 1; i >= 0; i-- {
+	for i := a.Size() - 1; i >= 0; i-- {
 		if a.elements[i] == e {
 			return i
 		}
@@ -367,16 +334,14 @@ func (a *arrayList[E]) SubList(fromIndex, toIndex int) List[E] {
 	if fromIndex > toIndex {
 		panic(fmt.Errorf("fromIndex:%d must not greater than toIndex:%d", fromIndex, toIndex))
 	}
-	if toIndex >= a.eleSize {
-		panic(fmt.Errorf("toIndex:%d out of index bound：%d", toIndex, a.eleSize))
+	if toIndex >= a.Size() {
+		panic(fmt.Errorf("toIndex:%d out of index bound：%d", toIndex, a.Size()))
 	}
 	if fromIndex < 0 {
 		panic(fmt.Errorf("fromIndex:%d out of index bound：%d", toIndex, 0))
 	}
-	eleSize := toIndex - fromIndex + 1
+	eleSize := toIndex - fromIndex
 	arr := arrayList[E]{
-		capacity: eleSize,
-		eleSize:  eleSize,
 		elements: make([]E, eleSize),
 	}
 	copy(arr.elements, a.elements[fromIndex:toIndex])
@@ -385,21 +350,12 @@ func (a *arrayList[E]) SubList(fromIndex, toIndex int) List[E] {
 
 func (a *arrayList[E]) Clone() ArrayList[E] {
 	arr := arrayList[E]{}
-	arr.capacity = a.capacity
-	arr.eleSize = a.eleSize
 	arr.elements = a.elements
-	arr.elements = make([]E, arr.capacity)
+	arr.elements = make([]E, a.Size())
 	copy(arr.elements, a.elements)
 	return &arr
 }
 
-func (a *arrayList[E]) growth(newCapacity int) {
-	// 初始化新数组
-	newElements := make([]E, newCapacity)
-	copy(newElements, a.elements)
-	a.capacity = newCapacity
-	a.elements = newElements
-}
 func (a *arrayList[E]) ToDataSlice() []E {
 	return a.elements
 }
